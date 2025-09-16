@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Feedly Scroll Widget</string>
+    <string name="action_import_opml">Importar OPML de Feedly</string>
+    <string name="action_refresh">Actualizar ahora</string>
+    <string name="hint_tap_to_configure">Toca para configurar</string>
+    <string name="empty_list">Sin artículos (importa tu OPML y actualiza)</string>
+</resources>
