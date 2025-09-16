@@ -5,32 +5,46 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Install Android SDK packages
         run: |
           sdkmanager --install "platform-tools" "cmdline-tools;latest" "platforms;android-35" "build-tools;35.0.0"
           yes | sdkmanager --licenses
 
-      - name: Build (no cache)
+      - name: Debug: lista de archivos
+        run: |
+          pwd
+          ls -la
+          echo "--- contenido FeedlyScrollWidget_Customizable ---"
+          ls -la FeedlyScrollWidget_Customizable || true
+          echo "--- settings.gradle.kts ---"
+          sed -n '1,120p' FeedlyScrollWidget_Customizable/settings.gradle.kts || true
+
+      - name: Build (sin caché) en subcarpeta
         uses: gradle/gradle-build-action@v3
         with:
           gradle-version: 8.7
           cache-disabled: true
           build-root-directory: FeedlyScrollWidget_Customizable
-          arguments: :app:assembleDebug
+          arguments: :app:assembleDebug --stacktrace --info
 
-      - name: Upload APK
+      - name: Subir APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: FeedlyScrollWidget_Customizable/app/build/outputs/apk/debug/app-debug.apk
+
 
